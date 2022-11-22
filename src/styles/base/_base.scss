@@ -15,3 +15,16 @@ body {
   box-sizing: border-box;
   font-family: Arial, Roboto, "Helvetica Neue", sans-serif;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 0;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
