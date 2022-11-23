@@ -6,16 +6,7 @@ a {
 .toolbar__spacer {
   flex: 1 1 auto;
 }
-.toolbar__btn {
-  background: none;
-  border: none;
-  cursor: pointer;
 
-  &:hover {
-    transform: scale(1.2);
-    transition: all 0.2s;
-  }
-}
 .toolbar__search {
   width: 50rem;
   height: 3rem;
