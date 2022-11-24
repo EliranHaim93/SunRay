@@ -1,6 +1,15 @@
-<mat-toolbar color="warn">
-  <a routerLink="">SunRay</a>
-  <span class="toolbar__spacer"></span>
-
-  <app-icon-button></app-icon-button>
+<mat-toolbar color="primary" class="toolbar">
+  <a routerLink="" class="toolbar__link">SunRay</a>
+  <nav class="toolbar__nav">
+    <a
+      class="toolbar__link"
+      routerLink=""
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Main</a
+    >
+    <a class="toolbar__link" routerLink="favorites" routerLinkActive="active"
+      >favorite</a
+    >
+  </nav>
 </mat-toolbar>

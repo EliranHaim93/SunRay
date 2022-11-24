@@ -4,6 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [],
@@ -13,7 +14,14 @@ import { MatCardModule } from '@angular/material/card';
     MatIconModule,
     MatInputModule,
     MatCardModule,
+    MatAutocompleteModule,
   ],
-  exports: [MatToolbarModule, MatIconModule, MatInputModule, MatCardModule],
+  exports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatInputModule,
+    MatCardModule,
+    MatAutocompleteModule,
+  ],
 })
 export class MaterialModule {}

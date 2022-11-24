@@ -1,19 +1,33 @@
 <div class="container">
   <section class="search">
-    <div class="input-box">
-      <input
-        class="search-field"
-        type="text"
-        placeholder="🔍 Enter any city..."
-        id="cityinput"
-      />
-      <!-- <input type="submit" value="Submit" id="add" /> -->
+    <form class="input-box">
+      <mat-form-field>
+        <mat-label class="input-label">🔍 Enter any city...</mat-label>
+        <input
+          class="search-field"
+          type="text"
+          aria-label="City"
+          matInput
+          [formControl]="searchField"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="option"
+          >
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <!-- TODO:add reactive validation for english char only pattern   -->
       <button class="btn-submit" type="submit" id="add">Submit</button>
-    </div>
+    </form>
   </section>
 
-  <ul class="weather-days">
-    <li *ngFor="let day of days" class="weather-box">
+  <section class="weather-days">
+    <!-- <div *ngFor="let day of days" class="weather-box"> -->
+    <div class="weather-box">
       <div class="weather-info">
         <h2 class="city-name" id="cityoutput">tel aviv - israel</h2>
         <h3 class="date">23/12/22</h3>
@@ -21,6 +35,6 @@
         <p class="temp-day" id="temp">15</p>
         <p class="temp-night" id="temp">15</p>
       </div>
-    </li>
-  </ul>
+    </div>
+  </section>
 </div>

@@ -10,6 +10,7 @@ import { ToolbarComponent } from './features/toolbar/toolbar.component';
 import { WeatherComponent } from './features/weather/weather.component';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { FavoritesComponent } from './features/favorites/favorites.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { FavoritesComponent } from './features/favorites/favorites.component';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

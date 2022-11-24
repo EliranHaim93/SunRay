@@ -1,15 +1,15 @@
-a {
+.toolbar {
+  display: flex;
+  gap: 8rem;
+}
+.toolbar__nav {
+  @extend .toolbar;
+}
+
+.active {
+  border-bottom: 2px solid black;
+}
+.toolbar__link {
   text-decoration: none;
   color: #fff;
-}
-
-.toolbar__spacer {
-  flex: 1 1 auto;
-}
-
-.toolbar__search {
-  width: 50rem;
-  height: 3rem;
-  padding: 0 2rem;
-  border-radius: 100px;
 }
