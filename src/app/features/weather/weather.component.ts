@@ -16,21 +16,19 @@ export class WeatherComponent implements OnInit {
 
   //---------
   cityName!: string;
-
-  CurrentCityName!: string;
+  CurrentCityName: string = 'Tel Aviv';
   CurrentDate!: Date;
   CurrentDescription!: string;
-  CurrentDayTemp!: Number;
-  CurrentNightTemp!: number;
+  CurrentTemp!: Number;
   //----
 
   currentLocationKey!: string;
   searchParam!: string;
-  options: string[] = [];
 
   fiveDaysForecast$ = new Observable<any>();
   currentForcast$ = new Observable<any>();
 
+  options: string[] = [];
   filteredOptions!: Observable<string[]>;
 
   constructor(private weatherService: WeatherService) {}
@@ -40,7 +38,18 @@ export class WeatherComponent implements OnInit {
       startWith(''),
       map((value: any) => this.filter(value || ''))
     );
+
     this.getDeafultForcast();
+    this.getCurrentWeather();
+  }
+
+  getCurrentWeather() {
+    this.weatherService.getCurrentWeather().subscribe((res) => {
+      console.log(res);
+      this.CurrentDate = res[0].LocalObservationDateTime;
+      this.CurrentDescription = res[0].WeatherText;
+      this.CurrentTemp = res[0].Temperature.Metric.Value;
+    });
   }
 
   getDeafultForcast() {

@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- <div class="test">{{ "2022-11-24T07:00:00+02:00" | date: "dd/MM/yyyy" }}</div> -->
   <section class="search">
     <form class="input-box" (ngSubmit)="onSubmit()">
       <mat-form-field>
@@ -36,10 +35,9 @@
     <div class="weather-box">
       <div class="weather-info">
         <h2 class="city-name">{{ CurrentCityName }}</h2>
-        <h3 class="date">{{ CurrentDate }}</h3>
+        <h3 class="date">{{ CurrentDate | date: "dd/MM/yyyy" }}</h3>
         <p class="description">{{ CurrentDescription }}</p>
-        <p class="temp-day">{{ CurrentDayTemp }}</p>
-        <p class="temp-night">{{ CurrentNightTemp }}</p>
+        <p class="temp-day">{{ CurrentTemp }}°C</p>
       </div>
     </div>
   </section>

@@ -17,9 +17,9 @@ export class WeatherService {
     );
   }
 
-  getCurrentWeather(cityName: string): Observable<any> {
+  getCurrentWeather(): Observable<any> {
     return this.http.get(
-      `http://dataservice.accuweather.com/currentconditions/v1/${cityName}?${this.APIKEY}`
+      `http://dataservice.accuweather.com/currentconditions/v1/215854${this.APIKEY}`
     );
   }
   getAutocomplete(cityName: string): Observable<any> {
