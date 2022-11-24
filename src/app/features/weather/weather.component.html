@@ -1,6 +1,7 @@
 <div class="container">
+  <!-- <div class="test">{{ "2022-11-24T07:00:00+02:00" | date: "dd/MM/yyyy" }}</div> -->
   <section class="search">
-    <form class="input-box">
+    <form class="input-box" (ngSubmit)="onSubmit()">
       <mat-form-field>
         <mat-label class="input-label">🔍 Enter any city...</mat-label>
         <input
@@ -8,6 +9,7 @@
           type="text"
           aria-label="City"
           matInput
+          [(ngModel)]="searchParam"
           [formControl]="searchField"
           [matAutocomplete]="auto"
         />
@@ -20,20 +22,39 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <!-- TODO:add reactive validation for english char only pattern   -->
-      <button class="btn-submit" type="submit" id="add">Submit</button>
+      <button
+        class="btn-submit"
+        type="submit"
+        (click)="onSubmit(); $event.preventDefault()"
+      >
+        Submit
+      </button>
     </form>
   </section>
 
-  <section class="weather-days">
-    <!-- <div *ngFor="let day of days" class="weather-box"> -->
+  <section class="weather-current">
     <div class="weather-box">
       <div class="weather-info">
-        <h2 class="city-name" id="cityoutput">tel aviv - israel</h2>
-        <h3 class="date">23/12/22</h3>
-        <p class="description" id="description">sunny</p>
-        <p class="temp-day" id="temp">15</p>
-        <p class="temp-night" id="temp">15</p>
+        <h2 class="city-name">{{ CurrentCityName }}</h2>
+        <h3 class="date">{{ CurrentDate }}</h3>
+        <p class="description">{{ CurrentDescription }}</p>
+        <p class="temp-day">{{ CurrentDayTemp }}</p>
+        <p class="temp-night">{{ CurrentNightTemp }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="weather-days">
+    <div
+      *ngFor="let item of fiveDaysForecast$ | async; let i = index"
+      class="weather-box"
+    >
+      <div class="weather-info">
+        <h2 class="city-name">{{ cityName }}</h2>
+        <h3 class="date">{{ date }}</h3>
+        <p class="description">123</p>
+        <p class="temp-day">{{ dayTemp }}</p>
+        <p class="temp-night">{{ nightTemp }}</p>
       </div>
     </div>
   </section>
