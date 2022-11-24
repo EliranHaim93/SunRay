@@ -11,6 +11,7 @@ import { WeatherComponent } from './features/weather/weather.component';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { FavoritesComponent } from './features/favorites/favorites.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TemperatureConverterPipe } from './utils/temperature-converter.pipe';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     WeatherComponent,
     IconButtonComponent,
     FavoritesComponent,
+    TemperatureConverterPipe,
   ],
   imports: [
     BrowserModule,

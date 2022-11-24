@@ -51,10 +51,16 @@
     >
       <div class="weather-info">
         <h2 class="city-name">{{ cityName }}</h2>
-        <h3 class="date">{{ date }}</h3>
-        <p class="description">123</p>
-        <p class="temp-day">{{ dayTemp }}</p>
-        <p class="temp-night">{{ nightTemp }}</p>
+        <h3 class="date">{{ item.Date | date: "dd/MM/yyyy" }}</h3>
+        <p class="temp-day">
+          {{ item.Temperature.Maximum.Value | temperatureConverter: "C" }}°C
+        </p>
+        <p class="description">{{ item.Day.IconPhrase }}</p>
+
+        <p class="temp-night">
+          {{ item.Temperature.Minimum.Value | temperatureConverter: "C" }}°C
+        </p>
+        <p class="description">{{ item.Night.IconPhrase }}</p>
       </div>
     </div>
   </section>

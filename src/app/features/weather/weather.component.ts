@@ -1,14 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import {
-  debounceTime,
-  map,
-  Observable,
-  of,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { FormControl, Validators } from '@angular/forms';
+import { map, Observable, startWith, switchMap, tap } from 'rxjs';
 import { WeatherService } from 'src/app/services/weather.service';
 
 @Component({
@@ -24,10 +16,6 @@ export class WeatherComponent implements OnInit {
 
   //---------
   cityName!: string;
-  date!: Date;
-  description!: string;
-  dayTemp!: Number;
-  nightTemp!: number;
 
   CurrentCityName!: string;
   CurrentDate!: Date;
@@ -56,15 +44,17 @@ export class WeatherComponent implements OnInit {
   }
 
   getDeafultForcast() {
-    this.fiveDaysForecast$ = this.weatherService
-      .getCity('Tel Aviv')
-      .pipe(
-        switchMap((res) =>
-          this.weatherService
-            .get5DayForcast(res[0].Key)
-            .pipe(map((data) => data.DailyForecasts))
+    this.fiveDaysForecast$ = this.weatherService.getCity('Tel Aviv').pipe(
+      tap((res) => (this.cityName = res[0].LocalizedName)),
+      switchMap((res) =>
+        this.weatherService.get5DayForcast(res[0].Key).pipe(
+          map(
+            (data) => data.DailyForecasts
+            // (data) => console.log(data.DailyForecasts)
+          )
         )
-      );
+      )
+    );
   }
 
   onSubmit() {
@@ -78,15 +68,14 @@ export class WeatherComponent implements OnInit {
     //     .pipe(map((data) => data.DailyForecasts));
     // });
 
-    this.fiveDaysForecast$ = this.weatherService
-      .getCity(this.searchParam)
-      .pipe(
-        switchMap((res) =>
-          this.weatherService
-            .get5DayForcast(res[0].Key)
-            .pipe(map((data) => data.DailyForecasts))
-        )
-      );
+    this.fiveDaysForecast$ = this.weatherService.getCity(this.searchParam).pipe(
+      tap((res) => (this.cityName = res[0].LocalizedName)),
+      switchMap((res) =>
+        this.weatherService
+          .get5DayForcast(res[0].Key)
+          .pipe(map((data) => data.DailyForecasts))
+      )
+    );
   }
 
   private filter(value: string): string[] {
