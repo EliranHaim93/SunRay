@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { map, Observable, startWith, switchMap, tap } from 'rxjs';
+import {
+  map,
+  Observable,
+  startWith,
+  switchMap,
+  tap,
+  catchError,
+  Subject,
+} from 'rxjs';
 import { WeatherService } from 'src/app/services/weather.service';
 
 @Component({
@@ -28,24 +36,18 @@ export class WeatherComponent implements OnInit {
   fiveDaysForecast$ = new Observable<any>();
   currentForcast$ = new Observable<any>();
 
-  options: string[] = [];
+  autoCompleteName = new Subject<string>();
   filteredOptions!: Observable<string[]>;
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.filteredOptions = this.searchField.valueChanges.pipe(
-      startWith(''),
-      map((value: any) => this.filter(value || ''))
-    );
-
     this.getDeafultForcast();
     this.getCurrentWeather();
   }
 
   getCurrentWeather() {
     this.weatherService.getCurrentWeather().subscribe((res) => {
-      console.log(res);
       this.CurrentDate = res[0].LocalObservationDateTime;
       this.CurrentDescription = res[0].WeatherText;
       this.CurrentTemp = res[0].Temperature.Metric.Value;
@@ -87,14 +89,7 @@ export class WeatherComponent implements OnInit {
     );
   }
 
-  private filter(value: string): string[] {
-    const filterValue = this.normalizeValue(value);
-    return this.options.filter((option) =>
-      this.normalizeValue(option).includes(filterValue)
-    );
-  }
-
-  private normalizeValue(value: string): string {
-    return value.toLowerCase().replace(/\s/g, '');
+  autocomplete() {
+    //TODO: autocomplete integrate with the searchParam atribute as a subject to sent values via .next() and go through a pipe here to find suggestions
   }
 }

@@ -50,6 +50,7 @@
   text-align: center;
   width: 20rem;
   justify-self: center;
+  clip-path: polygon(15% 0, 100% 0%, 85% 100%, 0% 100%);
 }
 
 .weather-info {
@@ -78,4 +79,10 @@
 
 .description {
   height: 6.5rem;
+}
+
+.weather-now {
+  font-size: small;
+  font-weight: bold;
+  color: #ab0a0a;
 }

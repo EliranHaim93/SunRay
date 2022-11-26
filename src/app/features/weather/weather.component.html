@@ -1,6 +1,6 @@
 <div class="container">
   <section class="search">
-    <form class="input-box" (ngSubmit)="onSubmit()">
+    <form class="input-box" (ngSubmit)="onSubmit()" autocomplete="off">
       <mat-form-field>
         <mat-label class="input-label">🔍 Enter any city...</mat-label>
         <input
@@ -10,16 +10,8 @@
           matInput
           [(ngModel)]="searchParam"
           [formControl]="searchField"
-          [matAutocomplete]="auto"
+          (keyup)="autocomplete.next($any($event).target.Value)"
         />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-          >
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
       </mat-form-field>
       <button
         class="btn-submit"
@@ -37,7 +29,10 @@
         <h2 class="city-name">{{ CurrentCityName }}</h2>
         <h3 class="date">{{ CurrentDate | date: "dd/MM/yyyy" }}</h3>
         <p class="description">{{ CurrentDescription }}</p>
-        <p class="temp-day">{{ CurrentTemp }}°C</p>
+        <p class="temp-day">
+          <span class="weather-now">NOW</span>
+          {{ CurrentTemp }}°C
+        </p>
       </div>
     </div>
   </section>
@@ -51,12 +46,12 @@
         <h2 class="city-name">{{ cityName }}</h2>
         <h3 class="date">{{ item.Date | date: "dd/MM/yyyy" }}</h3>
         <p class="temp-day">
-          {{ item.Temperature.Maximum.Value | temperatureConverter: "C" }}°C
+          {{ item.Temperature.Maximum.Value | temperatureConverter: "C" }}°C 🌞
         </p>
         <p class="description">{{ item.Day.IconPhrase }}</p>
 
         <p class="temp-night">
-          {{ item.Temperature.Minimum.Value | temperatureConverter: "C" }}°C
+          {{ item.Temperature.Minimum.Value | temperatureConverter: "C" }}°C 🌛
         </p>
         <p class="description">{{ item.Night.IconPhrase }}</p>
       </div>
