@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
   map,
   Observable,
-  startWith,
   switchMap,
   tap,
-  catchError,
   Subject,
+  filter,
+  debounceTime,
 } from 'rxjs';
+import { City } from 'src/app/models/city';
 import { WeatherService } from 'src/app/services/weather.service';
 
 @Component({
@@ -16,7 +17,7 @@ import { WeatherService } from 'src/app/services/weather.service';
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.scss'],
 })
-export class WeatherComponent implements OnInit {
+export class WeatherComponent implements OnInit, OnChanges {
   searchField = new FormControl('', [
     Validators.required,
     Validators.pattern("^[a-zA-Z -']+"),
@@ -36,14 +37,45 @@ export class WeatherComponent implements OnInit {
   fiveDaysForecast$ = new Observable<any>();
   currentForcast$ = new Observable<any>();
 
-  autoCompleteName = new Subject<string>();
-  filteredOptions!: Observable<string[]>;
+  autoCompleteKey$ = new Subject<string>();
+  options!: string[];
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
     this.getDeafultForcast();
     this.getCurrentWeather();
+
+    this.autoCompleteKey$
+      .pipe(
+        debounceTime(300),
+        filter((data: string) => data.length > 0),
+        switchMap((data: string) => {
+          return this.weatherService.getAutocomplete(data);
+        })
+      )
+      .subscribe((results: City[]) => {
+        results.forEach((result) => {
+          let cityName = result.LocalizedName;
+          this.options.push(cityName);
+          console.log(this.options);
+          ד;
+        });
+      });
+  }
+
+  ngOnChanges() {
+    // this.autoCompleteKey
+    //   .pipe(
+    //     filter((data: string) => data.length > 0),
+    //     debounceTime(500),
+    //     switchMap((data: string) => {
+    //       return this.weatherService.getAutocomplete(data);
+    //     })
+    //   )
+    //   .subscribe((options: any) => {
+    //     console.log(options);
+    //   });
   }
 
   getCurrentWeather() {
@@ -89,7 +121,7 @@ export class WeatherComponent implements OnInit {
     );
   }
 
-  autocomplete() {
+  SelectOption() {
     //TODO: autocomplete integrate with the searchParam atribute as a subject to sent values via .next() and go through a pipe here to find suggestions
   }
 }

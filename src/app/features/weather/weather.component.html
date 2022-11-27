@@ -10,9 +10,20 @@
           matInput
           [(ngModel)]="searchParam"
           [formControl]="searchField"
-          (keyup)="autocomplete.next($any($event).target.Value)"
+          (keyup)="autoCompleteKey$.next(searchParam)"
         />
       </mat-form-field>
+
+      <div class="autoCompleteOptions" *ngIf="options">
+        <div
+          class="option"
+          *ngFor="let option of options"
+          (click)="SelectOption()"
+        >
+          {{ option }}
+        </div>
+      </div>
+
       <button
         class="btn-submit"
         type="submit"

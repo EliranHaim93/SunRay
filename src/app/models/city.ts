@@ -4,4 +4,6 @@ export interface City {
   Type: string;
   Rank: number;
   LocalizedName: string;
+  Country?: any;
+  AdministrativeArea?: any;
 }
