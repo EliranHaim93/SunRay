@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
   map,
@@ -8,6 +8,8 @@ import {
   Subject,
   filter,
   debounceTime,
+  startWith,
+  distinctUntilChanged,
 } from 'rxjs';
 import { City } from 'src/app/models/city';
 import { WeatherService } from 'src/app/services/weather.service';
@@ -17,7 +19,7 @@ import { WeatherService } from 'src/app/services/weather.service';
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.scss'],
 })
-export class WeatherComponent implements OnInit, OnChanges {
+export class WeatherComponent implements OnInit {
   searchField = new FormControl('', [
     Validators.required,
     Validators.pattern("^[a-zA-Z -']+"),
@@ -32,13 +34,13 @@ export class WeatherComponent implements OnInit, OnChanges {
   //----
 
   currentLocationKey!: string;
-  searchParam!: string;
 
   fiveDaysForecast$ = new Observable<any>();
   currentForcast$ = new Observable<any>();
 
   autoCompleteKey$ = new Subject<string>();
-  options!: string[];
+  options: string[] = [];
+  filteredOptions!: Observable<string[]>;
 
   constructor(private weatherService: WeatherService) {}
 
@@ -46,36 +48,29 @@ export class WeatherComponent implements OnInit, OnChanges {
     this.getDeafultForcast();
     this.getCurrentWeather();
 
-    this.autoCompleteKey$
-      .pipe(
-        debounceTime(300),
-        filter((data: string) => data.length > 0),
-        switchMap((data: string) => {
-          return this.weatherService.getAutocomplete(data);
-        })
-      )
-      .subscribe((results: City[]) => {
-        results.forEach((result) => {
-          let cityName = result.LocalizedName;
-          this.options.push(cityName);
-          console.log(this.options);
-          ד;
-        });
-      });
-  }
-
-  ngOnChanges() {
-    // this.autoCompleteKey
+    // this.autoCompleteKey$
     //   .pipe(
+    //     debounceTime(300),
     //     filter((data: string) => data.length > 0),
-    //     debounceTime(500),
     //     switchMap((data: string) => {
     //       return this.weatherService.getAutocomplete(data);
     //     })
     //   )
-    //   .subscribe((options: any) => {
-    //     console.log(options);
+    //   .subscribe((results: City[]) => {
+    //     results.forEach((result) => {
+    //       let cityName = result.LocalizedName;
+    //       this.options.push(cityName);
+    //       console.log(cityName);
+    //     });
     //   });
+
+    this.filteredOptions = this.searchField.valueChanges.pipe(
+      filter((value) => !!value),
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap((value) => this.weatherService.getAutocomplete(value)),
+      map((data: City[]) => data.map((city) => city.LocalizedName))
+    );
   }
 
   getCurrentWeather() {
@@ -90,30 +85,6 @@ export class WeatherComponent implements OnInit, OnChanges {
     this.fiveDaysForecast$ = this.weatherService.getCity('Tel Aviv').pipe(
       tap((res) => (this.cityName = res[0].LocalizedName)),
       switchMap((res) =>
-        this.weatherService.get5DayForcast(res[0].Key).pipe(
-          map(
-            (data) => data.DailyForecasts
-            // (data) => console.log(data.DailyForecasts)
-          )
-        )
-      )
-    );
-  }
-
-  onSubmit() {
-    // console.log(this.searchParam);
-    // this.weatherService.getCity(this.searchParam).subscribe((res) => {
-    //   console.log(res);
-    //   this.currentLocationKey = res[0].Key;
-
-    //   this.fiveDaysForecast$ = this.weatherService
-    //     .get5DayForcast(this.currentLocationKey)
-    //     .pipe(map((data) => data.DailyForecasts));
-    // });
-
-    this.fiveDaysForecast$ = this.weatherService.getCity(this.searchParam).pipe(
-      tap((res) => (this.cityName = res[0].LocalizedName)),
-      switchMap((res) =>
         this.weatherService
           .get5DayForcast(res[0].Key)
           .pipe(map((data) => data.DailyForecasts))
@@ -121,7 +92,16 @@ export class WeatherComponent implements OnInit, OnChanges {
     );
   }
 
-  SelectOption() {
-    //TODO: autocomplete integrate with the searchParam atribute as a subject to sent values via .next() and go through a pipe here to find suggestions
+  onSubmit() {
+    this.fiveDaysForecast$ = this.weatherService
+      .getCity(this.searchField.value)
+      .pipe(
+        tap((res) => (this.cityName = res[0].LocalizedName)),
+        switchMap((res) =>
+          this.weatherService
+            .get5DayForcast(res[0].Key)
+            .pipe(map((data) => data.DailyForecasts))
+        )
+      );
   }
 }
